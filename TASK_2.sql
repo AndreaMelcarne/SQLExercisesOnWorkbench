@@ -1,20 +1,14 @@
-SELECT salesRepEmployeeNumber as Employee_Num,
-SUM(total_spent_per_order) as total_revenue
-FROM(
-	SELECT sub.orderNumber,
-	SUM(total_spent_per_product) AS total_spent_per_order,
-	sub.customerNumber
-	FROM(	
-		SELECT orderdetails.orderNumber, 
-		orders.customerNumber,
-		priceEach*quantityOrdered as total_spent_per_product
-		FROM orderdetails
-		INNER JOIN orders ON orderdetails.orderNumber = orders.orderNumber
+SELECT salesRepEmployeeNumber as Employee_ID
+,SUM(total_spent_per_order) as total_revenue
+FROM(	SELECT OD.orderNumber 
+		,O.customerNumber
+		,SUM(priceEach*quantityOrdered) as total_spent_per_order
+		FROM orderdetails OD
+		INNER JOIN orders O ON OD.orderNumber = O.orderNumber
 		WHERE status= 'shipped'
-		) AS sub
-	GROUP BY sub.orderNumber
-	ORDER BY total_spent_per_order DESC
-) AS test
-INNER JOIN customers ON customers.customerNumber = test.customerNumber
-GROUP BY employee_num
+        GROUP BY orderNumber, customerNumber
+		ORDER BY total_spent_per_order DESC
+		) AS SUB
+INNER JOIN customers C ON C.customerNumber = SUB.customerNumber
+GROUP BY employee_id
 ORDER BY total_revenue DESC
