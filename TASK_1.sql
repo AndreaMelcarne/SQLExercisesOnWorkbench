@@ -1,9 +1,7 @@
-SELECT COUNT(Employee_num) as Num_of_orders_per_employee, Employee_Num
-    FROM(
-		SELECT customers.salesRepEmployeeNumber as Employee_num
-		FROM orders
-		LEFT OUTER JOIN customers ON orders.customerNumber = customers.customerNumber
-		WHERE orders.status='shipped'
-		) AS sub
-GROUP BY Employee_num 
-ORDER BY Num_of_orders_per_employee DESC
+SELECT C.salesRepEmployeeNumber as Employee_ID, 
+        COUNT(O.orderNumber) as Num_of_orders_per_employee
+		FROM orders O
+		LEFT OUTER JOIN customers C ON O.customerNumber = C.customerNumber
+		WHERE O.status='shipped'
+        GROUP BY Employee_ID 
+		ORDER BY Num_of_orders_per_employee DESC
