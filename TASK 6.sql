@@ -1,20 +1,16 @@
--- products not sold in 2003
-SELECT orderdate,
-orderdetails.productcode
-FROM orders
-INNER JOIN orderdetails ON orderdetails.orderNumber=orders.orderNumber
-WHERE EXTRACT(YEAR FROM orderdate) != 2003
+with A as (SELECT O.orderDate
+	,OD.productcode
+    FROM orders O 
+    INNER JOIN orderdetails OD ON O.orderNumber=OD.orderNumber),
+    B as (SELECT O.orderdate
+	,OD.productcode
+    FROM orders O
+    INNER JOIN orderdetails OD ON O.ordernumber=OD.ordernumber
+    WHERE EXTRACT(YEAR FROM orderdate) = "2003")
+SELECT A.productcode
+,A.orderdate
+FROM A
+LEFT JOIN B ON A.orderdate = B.orderdate AND A.productcode=B.productcode
+WHERE B.productcode IS NULL
 
--- products not sold in 2004
-SELECT orderdate,
-orderdetails.productcode
-FROM orders
-INNER JOIN orderdetails ON orderdetails.orderNumber=orders.orderNumber
-WHERE EXTRACT(YEAR FROM orderdate) != 2004
-
--- products not sold in 2005
-SELECT orderdate,
-orderdetails.productcode
-FROM orders
-INNER JOIN orderdetails ON orderdetails.orderNumber=orders.orderNumber
-WHERE EXTRACT(YEAR FROM orderdate) != 2005
+--CHANGE THE YEAR TO GET THE PRODUCTS NOT SOLD IN THAT YEAR (2003 for the example)
