@@ -1,3 +1,6 @@
+-- The VP of sales would like to award EOY bonues to To the employee whose total sales in the three year period brought the highest revenue
+
+The VP of sales would like to award EOY bonues to:
 SELECT salesRepEmployeeNumber as Employee_ID
 ,SUM(total_spent_per_order) as total_revenue
 FROM(	SELECT OD.orderNumber 
